@@ -9,6 +9,35 @@
 </head>
 <script src="scripts/main.js"></script>
 <body>
+
+    <div class='container-small'>
+        <label for="timestampField">Timestamp</label>
+        <input type="text" name="timestampField" id="timestampField">
+    </div>
+    <div class="container-small">
+        <label for="outputPacific">America/Los_Angeles</label>
+        <span name="outputPacific" id="outputPacific"></span>
+        <input type="text" name="outputPacific" id="textFieldPacific">
+    </div>
+    <div class="container-small">
+        <label for="outputEpoch">Epoch Time (ms)</label>
+        <span name="outputEpoch" id="outputEpoch"></span>
+        <input type="text" name="outputEpoch" id="textFieldEpoch">
+    </div>
+    <div class="container-small">
+        <div id="consoleMessage"></div>
+    </div>
+    <table id="conversionTable">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>ECMAScript Epoch (ms)</th>
+                <th>America/Los_Angeles (ISO 8601)</th>
+                <th>Local</th>
+            </tr>
+        </thead>
+    </table>
+
     
 </body>
 </html>
