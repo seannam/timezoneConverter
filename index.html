@@ -6,23 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timestamp Converter</title>
     <link rel="stylesheet" href="css/style.css">
+
 </head>
+<script src="libraries/luxon.min.js"></script>
 <script src="scripts/main.js"></script>
 <body>
 
     <div class='container-small'>
-        <label for="timestampField">Timestamp</label>
+        <label for="timestampField">SQL Timestamp</label>
         <input type="text" name="timestampField" id="timestampField">
     </div>
     <div class="container-small">
-        <label for="outputPacific">America/Los_Angeles</label>
-        <span name="outputPacific" id="outputPacific"></span>
-        <input type="text" name="outputPacific" id="textFieldPacific">
-    </div>
-    <div class="container-small">
-        <label for="outputEpoch">Epoch Time (ms)</label>
-        <span name="outputEpoch" id="outputEpoch"></span>
-        <input type="text" name="outputEpoch" id="textFieldEpoch">
+        <label for="epochField">Epoch Time (sec)</label>
+        <span name="epochField" id="epochField"></span>
+        <input type="text" name="epochField" id="epochField">
     </div>
     <div class="container-small">
         <div id="consoleMessage"></div>
@@ -31,9 +28,17 @@
         <thead>
             <tr>
                 <th>Timestamp</th>
-                <th>ECMAScript Epoch (ms)</th>
-                <th>America/Los_Angeles (ISO 8601)</th>
-                <th>Local</th>
+                <th>Unix Epoch</th>
+                <th colspan='2'>UTC</th>
+                <th colspan='2'>America/Los_Angeles</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>ISO 8601</th>
+                <th>Human Readable</th>
+                <th>ISO 8601</th>
+                <th>Human Readable</th>
             </tr>
         </thead>
     </table>
