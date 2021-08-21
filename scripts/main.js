@@ -1,79 +1,119 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const enterKeyCode = 13;
+  const DateTime = luxon.DateTime
 
-    const timestampInput = document.getElementById("timestampField");
-    timestampInput.focus();
+  const enterKeyCode = 13
 
-    // timestampInput.addEventListener("change", convertTimestamp);
-    timestampInput.addEventListener("keyup", convertTimestamp);
+  const timestampInput = document.getElementById('timestampField')
+  timestampInput.focus()
 
-    function convertTimestamp(event) {
-        // Convert on enter key
-        if (event.keyCode === enterKeyCode) {
-            let parsed = parseSQLTimestamp(timestampInput.value);
-            // let utcDate = new Date(
-            //     Date.UTC(
-            //         parsed.year, 
-            //         parsed.month, 
-            //         parsed.date, 
-            //         parsed.hours, 
-            //         parsed.mintues, 
-            //         parsed.seconds
-            //     )
-            // );
-            let utcDate = new Date(Date.UTC(2021,2,12,16,0,0));
-            let localDate = new Date(Date.parse(utcDate));
-            console.log(utcDate)
-            console.log(utcDate.toUTCString());
-            console.log(localDate)
+  // timestampInput.addEventListener("change", convertTimestamp);
+  timestampInput.addEventListener('keyup', convertTimestamp)
 
-            // var timestamp = new Date();
+  function convertTimestamp(event) {
+    // Convert on enter key
+    if (event.keyCode === enterKeyCode) {
 
-            let timestamp = "";
-            let pacificIso = "";
-            let local = "";
-            let epoch = "";
+      // Convert the SQL timestamp input to a luxon DateTime object
+      let sqlTimestamp = DateTime.fromSQL(timestampInput.value, { zone: 'UTC' });
 
-            timestamp = utcDate.toUTCString();
-            pacificIso = localDate.toISOString();
-            local = localDate.toLocaleString()
-            epoch = Date.parse(utcDate)
+      // Check if the timestamp is valid
+      if (!sqlTimestamp.isValid) {
+        console.error(`Error: ${sqlTimestamp.invalidReason}`)
+        console.error(`${sqlTimestamp.invalidExplanation}`)
+        return false
+      }
+      
+      const timestamp = timestampInput.value;
 
-            addRow('conversionTable', [timestamp, epoch, pacificIso, local]);
-        }
+      // Convert to Pacific time
+      let sqlTimestampPacific = sqlTimestamp.setZone('America/Los_Angeles');
+
+      // Convert the timestamp to unix time
+      let unixtime = sqlTimestamp.toSeconds();
+      let utcIso = sqlTimestamp.toString();
+      let utcHuman = sqlTimestamp.toLocaleString(DateTime.DATETIME_FULL);
+      let pacificIso = sqlTimestampPacific.toString();
+      let pacificHuman = sqlTimestampPacific.toLocaleString(DateTime.DATETIME_FULL);
+
+      addRow('conversionTable', [timestamp, unixtime, utcIso, utcHuman, pacificIso, pacificHuman]);
+
+      // -------------------------------------------------------------------------------------
+
+      // Convert the SQL timestamp input to a luxon DateTime object
+      sqlTimestamp = DateTime.fromSQL(timestampInput.value, { zone: 'America/Los_Angeles' });
+
+      // Check if the timestamp is valid
+      if (!sqlTimestamp.isValid) {
+        console.error(`Error: ${sqlTimestamp.invalidReason}`)
+        console.error(`${sqlTimestamp.invalidExplanation}`)
+        return false
+      }
+      
+      // Convert to Pacific time
+      let sqlTimestampUTC = sqlTimestamp.setZone('UTC')
+
+      unixtime = sqlTimestampUTC.toSeconds();
+      utcIso = sqlTimestampUTC.toString();
+      utcHuman = sqlTimestampUTC.toLocaleString(DateTime.DATETIME_FULL);
+      pacificIso = sqlTimestamp.toString();
+      pacificHuman = sqlTimestamp.toLocaleString(DateTime.DATETIME_FULL);
+      addRow('conversionTable', [timestamp, unixtime, utcIso, utcHuman, pacificIso, pacificHuman]);
     }
+  }
 
-    function addRow(tableID, cellList) {
-        document.getElementById("consoleMessage").innerText = "";
+  function addRow(tableID, cellList) {
+    document.getElementById('consoleMessage').innerText = ''
 
-        // Get a reference to the table
-        let tableRef = document.getElementById(tableID);
+    // Get a reference to the table
+    const tableRef = document.getElementById(tableID)
 
-        if (tableRef !== null) {
-            // Insert a row at the top
-            let newRow = tableRef.insertRow(-1);
+    if (tableRef !== null) {
+      // Insert a row at the top
+      const newRow = tableRef.insertRow(-1)
 
-            // Insert a cell for each type
-            cellList.forEach(element => {
-                let newCell = newRow.insertCell(-1);
-                // Append a text node to the cell
-                let newText = document.createTextNode(element);
-                newCell.appendChild(newText);
-            });
-        } else {
-            document.getElementById("consoleMessage").innerText = `${tableID} was not found!`;
-        }
+      // Insert a cell for each type
+      cellList.forEach(element => {
+        const newCell = newRow.insertCell(-1)
+        // Append a text node to the cell
+        const newText = document.createTextNode(element)
+        newCell.appendChild(newText)
+      })
+    } else {
+      document.getElementById('consoleMessage').innerText = `${tableID} was not found!`
     }
+  }
 
-    function parseSQLTimestamp(timestamp) {
-        // 2021-02-12 08:00:00
-        return {
-            year: 2021,
-            month: 02,
-            date: 12,
-            hours: 8,
-            minutes: 0,
-            seconds: 0
-        }
-    }
-});
+
+  // function parseSQLTimestamp (timestamp) {
+  // }
+
+  function basicFunctions() {
+    const fromsql = DateTime.fromSQL("2017-05-15 09:24:15");
+    console.log(fromsql)
+    console.log(fromsql.minute)
+    console.log('-----------------')
+
+    // const dt = DateTime.local(2017, 5, 15, 8, 30)
+    // console.log(dt)
+    // const now = DateTime.now()
+    // console.log(now)
+    // console.log(now.year)
+    // console.log(now.month)
+    // console.log(now.day)
+    // console.log(now.second)
+    // console.log(now.weekday)
+    // console.log(now.zoneName)
+    // console.log(now.offset)
+    // console.log(now.daysInMonth)
+
+    // console.log('--------------')
+
+    // const pacific = DateTime.fromObject({}, { zone: 'America/Los_Angeles' }) // now, but expressed in LA's local time
+    // console.log(pacific)
+
+    // const fromObject = DateTime.fromObject({ day: 22, hour: 12 }, { zone: 'America/Los_Angeles', numberingSystem: 'beng' });
+    // console.log(fromObject);
+    // const fromIso = DateTime.fromISO('2017-05-15T08:30:00');
+    // console.log(fromIso);
+  }
+})
