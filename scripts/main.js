@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const timestampInput = document.getElementById('timestampField')
   timestampInput.focus()
 
-  // timestampInput.addEventListener("change", convertTimestamp);
   timestampInput.addEventListener('keyup', convertTimestamp)
 
   function convertTimestamp(event) {
@@ -83,37 +82,4 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-
-  // function parseSQLTimestamp (timestamp) {
-  // }
-
-  function basicFunctions() {
-    const fromsql = DateTime.fromSQL("2017-05-15 09:24:15");
-    console.log(fromsql)
-    console.log(fromsql.minute)
-    console.log('-----------------')
-
-    // const dt = DateTime.local(2017, 5, 15, 8, 30)
-    // console.log(dt)
-    // const now = DateTime.now()
-    // console.log(now)
-    // console.log(now.year)
-    // console.log(now.month)
-    // console.log(now.day)
-    // console.log(now.second)
-    // console.log(now.weekday)
-    // console.log(now.zoneName)
-    // console.log(now.offset)
-    // console.log(now.daysInMonth)
-
-    // console.log('--------------')
-
-    // const pacific = DateTime.fromObject({}, { zone: 'America/Los_Angeles' }) // now, but expressed in LA's local time
-    // console.log(pacific)
-
-    // const fromObject = DateTime.fromObject({ day: 22, hour: 12 }, { zone: 'America/Los_Angeles', numberingSystem: 'beng' });
-    // console.log(fromObject);
-    // const fromIso = DateTime.fromISO('2017-05-15T08:30:00');
-    // console.log(fromIso);
-  }
 })
