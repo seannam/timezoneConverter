@@ -1,18 +1,40 @@
 document.addEventListener('DOMContentLoaded', function () {
   const DateTime = luxon.DateTime
-
   const enterKeyCode = 13
 
   const timestampInput = document.getElementById('timestampField')
   timestampInput.focus()
-
   timestampInput.addEventListener('keyup', convertTimestamp)
+
+  const unixTimeInput = document.getElementById('unixTimeField')
+  unixTimeInput.addEventListener('keyup', convertUnixTime)
+
+  function convertUnixTime(event) {
+    // Convert on enter key
+    if (event.keyCode === enterKeyCode) {
+      // Convert the Unix Time to a Luxon DateTime object
+      let dateTime = DateTime.fromSeconds(Number(unixTimeInput.value), { zone: 'UTC'})
+      let timestamp = ""
+
+      // Convert to Pacific time
+      let sqlTimestampPacific = dateTime.setZone('America/Los_Angeles');
+
+      // Convert the timestamp to unix time
+      const unixtime = unixTimeInput.value
+      let utcIso = dateTime.toString();
+      let utcHuman = dateTime.toLocaleString(DateTime.DATETIME_FULL);
+      let pacificIso = sqlTimestampPacific.toString();
+      let pacificHuman = sqlTimestampPacific.toLocaleString(DateTime.DATETIME_FULL);
+
+      addRow('conversionTable', [timestamp, unixtime, utcIso, utcHuman, pacificIso, pacificHuman]);
+    }
+  }
 
   function convertTimestamp(event) {
     // Convert on enter key
     if (event.keyCode === enterKeyCode) {
 
-      // Convert the SQL timestamp input to a luxon DateTime object
+      // Convert the SQL timestamp input to a Luxon DateTime object
       let sqlTimestamp = DateTime.fromSQL(timestampInput.value, { zone: 'UTC' });
 
       // Check if the timestamp is valid
@@ -21,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error(`${sqlTimestamp.invalidExplanation}`)
         return false
       }
-      
+
       const timestamp = timestampInput.value;
 
       // Convert to Pacific time
@@ -38,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // -------------------------------------------------------------------------------------
 
-      // Convert the SQL timestamp input to a luxon DateTime object
+      // Convert the SQL timestamp input to a Luxon DateTime object
       sqlTimestamp = DateTime.fromSQL(timestampInput.value, { zone: 'America/Los_Angeles' });
 
       // Check if the timestamp is valid
@@ -47,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error(`${sqlTimestamp.invalidExplanation}`)
         return false
       }
-      
+
       // Convert to Pacific time
       let sqlTimestampUTC = sqlTimestamp.setZone('UTC')
 
