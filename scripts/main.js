@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
   const DateTime = luxon.DateTime
   const enterKeyCode = 13
-
+  const sqlFormatString = 'yyyy-MM-dd hh:mm:ss'
   const timestampInput = document.getElementById('timestampField')
   timestampInput.focus()
   timestampInput.addEventListener('keyup', convertTimestamp)
@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (event.keyCode === enterKeyCode) {
       // Convert the Unix Time to a Luxon DateTime object
       let dateTime = DateTime.fromSeconds(Number(unixTimeInput.value), { zone: 'UTC'})
-      let timestamp = ""
 
       // Convert to Pacific time
       let sqlTimestampPacific = dateTime.setZone('America/Los_Angeles');
@@ -22,11 +21,13 @@ document.addEventListener('DOMContentLoaded', function () {
       // Convert the timestamp to unix time
       const unixtime = unixTimeInput.value
       let utcIso = dateTime.toString();
+      let utcSql = dateTime.toFormat(sqlFormatString);
       let utcHuman = dateTime.toLocaleString(DateTime.DATETIME_FULL);
       let pacificIso = sqlTimestampPacific.toString();
+      let pacificSql = sqlTimestampPacific.toFormat(sqlFormatString)
       let pacificHuman = sqlTimestampPacific.toLocaleString(DateTime.DATETIME_FULL);
 
-      addRow('conversionTable', [timestamp, unixtime, utcIso, utcHuman, pacificIso, pacificHuman]);
+      addRow('conversionTable', [unixtime, unixtime, utcIso, utcSql, utcHuman, pacificIso, pacificSql, pacificHuman]);
     }
   }
 
@@ -52,11 +53,13 @@ document.addEventListener('DOMContentLoaded', function () {
       // Convert the timestamp to unix time
       let unixtime = sqlTimestamp.toSeconds();
       let utcIso = sqlTimestamp.toString();
+      let utcSql = sqlTimestamp.toFormat(sqlFormatString);
       let utcHuman = sqlTimestamp.toLocaleString(DateTime.DATETIME_FULL);
       let pacificIso = sqlTimestampPacific.toString();
+      let pacificSql = sqlTimestampPacific.toFormat(sqlFormatString)
       let pacificHuman = sqlTimestampPacific.toLocaleString(DateTime.DATETIME_FULL);
 
-      addRow('conversionTable', [timestamp, unixtime, utcIso, utcHuman, pacificIso, pacificHuman]);
+      addRow('conversionTable', [timestamp, unixtime, utcIso, utcSql, utcHuman, pacificIso, pacificSql, pacificHuman]);
 
       // -------------------------------------------------------------------------------------
 
@@ -75,10 +78,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
       unixtime = sqlTimestampUTC.toSeconds();
       utcIso = sqlTimestampUTC.toString();
+      utcSql = sqlTimestampUTC.toFormat(sqlFormatString);
       utcHuman = sqlTimestampUTC.toLocaleString(DateTime.DATETIME_FULL);
       pacificIso = sqlTimestamp.toString();
+      pacificSql = sqlTimestamp.toFormat(sqlFormatString)
       pacificHuman = sqlTimestamp.toLocaleString(DateTime.DATETIME_FULL);
-      addRow('conversionTable', [timestamp, unixtime, utcIso, utcHuman, pacificIso, pacificHuman]);
+      addRow('conversionTable', [timestamp, unixtime, utcIso, utcSql, utcHuman, pacificIso, pacificSql, pacificHuman]);
     }
   }
 
